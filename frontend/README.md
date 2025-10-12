@@ -6,13 +6,13 @@ informacje potrzebne do uruchomienia aplikacji oraz krótki przewodnik po dostę
 ## Wymagania
 
 - Node.js 18+
-- pnpm, npm lub yarn (przykłady poniżej używają `pnpm`, ale możesz skorzystać z dowolnego menedżera)
+- npm (zalecane) – możesz oczywiście skorzystać z pnpm lub yarn, ale wszystkie przykłady używają `npm`
 
 ## Instalacja zależności
 
 ```bash
 cd frontend
-pnpm install
+npm install
 ```
 
 ## Generowanie SDK
@@ -20,16 +20,16 @@ pnpm install
 W repozytorium backendu dostępny jest plik OpenAPI. Aby zsynchronizować typy i klienta API, uruchom:
 
 ```bash
-pnpm run generate:sdk
+npm run generate:sdk
 ```
 
-Domyślnie komenda oczekuje pliku specyfikacji pod ścieżką `../backend/app/openapi.json` i wygeneruje
-aktualny klienta w katalogu `src/lib/api`.
+Domyślnie komenda korzysta z endpointu `http://localhost:8000/openapi.json` i wygeneruje aktualnego
+klienta w katalogu `src/lib/api`.
 
 ## Uruchamianie środowiska deweloperskiego
 
 ```bash
-pnpm run dev
+npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
 Aplikacja domyślnie nasłuchuje na porcie `5173`. Backend FastAPI powinien działać równolegle na
@@ -38,10 +38,10 @@ porcie `8000`, aby zapytania API mogły być obsługiwane.
 ## Budowanie produkcyjne
 
 ```bash
-pnpm run build
+npm run build
 ```
 
-Zbudowana aplikacja trafi do katalogu `build/`. Możesz ją uruchomić poleceniem `pnpm run preview`.
+Zbudowana aplikacja trafi do katalogu `.svelte-kit/output`. Możesz ją podglądnąć poleceniem `npm run preview`.
 
 ## Demo logowania
 
