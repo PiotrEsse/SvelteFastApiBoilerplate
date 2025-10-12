@@ -1,0 +1,34 @@
+{
+  "name": "sveltefastapiboilerplate-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:sdk": "openapi-typescript-codegen --input ../backend/app/openapi.json --output src/lib/api --name sdk --exportSchemas false",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/svelte-query": "^5.29.2",
+    "flowbite": "^2.3.0",
+    "flowbite-svelte": "^0.45.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^3.2.0",
+    "@sveltejs/kit": "^2.5.7",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.17",
+    "openapi-typescript-codegen": "^0.26.0",
+    "postcss": "^8.4.35",
+    "svelte": "^4.2.12",
+    "svelte-check": "^3.6.7",
+    "tailwindcss": "^3.4.3",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6",
+    "vitest": "^1.5.0"
+  }
+}
