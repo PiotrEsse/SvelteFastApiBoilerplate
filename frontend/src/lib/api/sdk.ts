@@ -15,6 +15,14 @@ export interface TodoListResponse {
   total: number;
 }
 
+export interface DueSoonQuery {
+  hours?: number;
+}
+
+export interface TriggerRemindersResponse {
+  task_id: string;
+}
+
 export interface TodoFilters {
   search?: string;
   status?: TodoStatus;
@@ -129,6 +137,12 @@ export const createSdk = (config: SdkConfig) => {
       list: (filters?: TodoFilters) =>
         request<TodoListResponse>('/todos', { method: 'GET' }, filters),
       get: (id: string) => request<Todo>(`/todos/${id}`, { method: 'GET' }),
+      dueSoon: (query?: DueSoonQuery) =>
+        request<Todo[]>(`/todos/due-soon`, { method: 'GET' }, query),
+      triggerReminders: () =>
+        request<TriggerRemindersResponse>(`/todos/trigger-reminders`, {
+          method: 'POST'
+        }),
       create: (payload: CreateTodoInput) =>
         request<Todo>('/todos', {
           method: 'POST',
