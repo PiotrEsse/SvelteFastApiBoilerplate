@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate:sdk": "openapi-typescript-codegen --input ../backend/app/openapi.json --output src/lib/api --name sdk --exportSchemas false",
+    "generate:sdk": "openapi-typescript-codegen --input http://localhost:8000/openapi.json --output src/lib/api --name sdk --exportSchemas false",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview"
