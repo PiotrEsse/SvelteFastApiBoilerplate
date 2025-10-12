@@ -5,7 +5,8 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from backend.app.api.deps import get_current_user, get_db
+from backend.app.api.deps import get_db
+from backend.app.dependencies.auth import get_current_user
 from backend.app.models.todo import TodoStatus
 from backend.app.models.user import User
 from backend.app.schemas.todo import TodoCreate, TodoRead, TodoUpdate
