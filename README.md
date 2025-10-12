@@ -13,7 +13,12 @@ zawiera konfigurację Docker Compose, prostą autoryzację JWT oraz wieloużytko
 ## Szybki start
 
 1. Uruchom kontenery: `cd infrastructure && docker compose up -d`.
-2. Backend: `cd backend && python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt && alembic upgrade head && uvicorn app.main:app --reload`.
-3. Frontend: `cd frontend && npm install && npm run generate:sdk && npm run dev -- --host 0.0.0.0 --port 5173`.
+2. Backend:
+   - `cd backend` i skopiuj konfigurację: `cp .env.example .env` (na Windows użyj `copy`).
+   - Utwórz środowisko: `python -m venv .venv && source .venv/bin/activate`.
+   - Zainstaluj zależności: `pip install -r requirements.txt`.
+   - Uruchom migracje: `alembic upgrade head`.
+   - Start API: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`.
+3. Frontend: `cd frontend && npm install && npm run generate:sdk && npm run dev -- --host 0.0.0.0 --port 5173` (backend musi działać przed generowaniem SDK).
 
 Szczegółowy opis kroków, opcjonalnych zadań Celery oraz dalszych usprawnień znajdziesz w `docs/NEXT_STEPS.md`.

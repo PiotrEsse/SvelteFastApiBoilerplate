@@ -2,13 +2,16 @@
 
 ## Uruchamianie aplikacji
 
-1. Zainstaluj zależności (np. `pip install -r requirements.txt`).
-2. Ustaw wymagane zmienne środowiskowe (np. `DATABASE_URL`, `CELERY_BROKER_URL`).
-3. Uruchom serwer API FastAPI: `uvicorn app.main:app --reload` (polecenie wykonuj z katalogu `backend`).
+1. Wejdź do katalogu `backend` i skopiuj plik konfiguracyjny: `cp .env.example .env` (na Windows `copy .env.example .env`).
+2. Utwórz i aktywuj środowisko wirtualne: `python -m venv .venv && source .venv/bin/activate`.
+3. Zainstaluj zależności: `pip install -r requirements.txt`.
+4. Wykonaj migracje bazy: `alembic upgrade head`.
+5. Uruchom serwer API FastAPI: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`.
 
 ## Zadania asynchroniczne
 
-Do obsługi powiadomień o zbliżających się terminach wykorzystywany jest Celery.
+Do obsługi powiadomień o zbliżających się terminach wykorzystywany jest Celery. W pliku `.env`
+określ adres brokera (`CELERY_BROKER_URL`) oraz backend (`CELERY_RESULT_BACKEND`).
 
 ### Uruchamianie workera i harmonogramu
 

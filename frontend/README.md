@@ -23,6 +23,8 @@ W repozytorium backendu dostępny jest plik OpenAPI. Aby zsynchronizować typy i
 npm run generate:sdk
 ```
 
+> Upewnij się, że backend FastAPI działa na `http://localhost:8000` zanim uruchomisz generowanie.
+
 Domyślnie komenda korzysta z endpointu `http://localhost:8000/openapi.json` i wygeneruje aktualnego
 klienta w katalogu `src/lib/api`.
 

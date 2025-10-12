@@ -18,12 +18,15 @@ docker compose up -d
 
 ```bash
 cd backend
+cp .env.example .env  # on Windows use: copy .env.example .env
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 alembic upgrade head
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+> Tip: before running the server, open `.env` and adjust secrets (e.g. `SECRET_KEY`) if needed.
 
 This spins up the FastAPI server with authentication, todo CRUD, and Celery integration already
 configured. The API is reachable at `http://localhost:8000` and exposes the OpenAPI spec under
@@ -37,6 +40,9 @@ npm install
 npm run generate:sdk
 npm run dev -- --host 0.0.0.0 --port 5173
 ```
+
+> Ensure the FastAPI server is already running before calling `npm run generate:sdk`, as the script
+> downloads the OpenAPI schema from `http://localhost:8000/openapi.json`.
 
 The SvelteKit dev server listens on port `5173` and communicates with the backend using the
 credentials-aware SDK generated from OpenAPI.
