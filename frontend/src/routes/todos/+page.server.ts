@@ -19,10 +19,12 @@ export const load: PageServerLoad = async ({ locals, url }) => {
   const filters = parsed.success ? parsed.data : {};
 
   const response = await locals.api.todos.list(filters);
+  const dueSoon = await locals.api.todos.dueSoon();
 
   return {
     filters,
     initialTodos: response.items,
-    total: response.total
+    total: response.total,
+    dueSoon
   };
 };

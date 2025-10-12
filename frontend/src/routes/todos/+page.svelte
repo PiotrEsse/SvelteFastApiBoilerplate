@@ -3,12 +3,13 @@
   import { createQuery } from '@tanstack/svelte-query';
   import { createTodoClient } from '$lib/api/client';
   import TodoCard from '$lib/components/TodoCard.svelte';
-  import type { TodoStatus } from '$lib/api/sdk';
+  import type { TodoStatus, Todo } from '$lib/api/sdk';
 
   export let data: {
     filters: { search?: string; status?: TodoStatus };
     initialTodos: import('$lib/api/sdk').Todo[];
     total: number;
+    dueSoon: Todo[];
   };
 
   const client = createTodoClient();
@@ -39,6 +40,25 @@
     };
   });
 
+  const dueSoonQuery = createQuery(() => ({
+    queryKey: ['todos', 'due-soon'],
+    queryFn: async () => {
+      const response = await client.todos.dueSoon();
+      return response;
+    },
+    initialData: data.dueSoon,
+    staleTime: 1000 * 60
+  }));
+
+  const formatDueDate = (value: string | null | undefined) => {
+    if (!value) return '';
+    const date = new Date(value);
+    return date.toLocaleString('pl-PL', {
+      dateStyle: 'short',
+      timeStyle: 'short'
+    });
+  };
+
   const statusOptions: { value: TodoStatus | ''; label: string }[] = [
     { value: '', label: 'Wszystkie statusy' },
     { value: 'pending', label: 'Do zrobienia' },
@@ -60,6 +80,31 @@
       Dodaj zadanie
     </a>
   </header>
+
+  {#if $dueSoonQuery.data?.length}
+    <section class="rounded-2xl border-l-4 border-amber-400 bg-amber-50 p-5 text-amber-900 shadow-sm">
+      <h2 class="text-lg font-semibold">Zbliżające się terminy</h2>
+      <p class="mt-1 text-sm">
+        Masz {$dueSoonQuery.data.length}
+        {$dueSoonQuery.data.length === 1 ? ' zadanie' : ' zadania'} z terminem w ciągu najbliższych 24 godzin.
+      </p>
+      <ul class="mt-3 space-y-2 text-sm">
+        {#each $dueSoonQuery.data.slice(0, 3) as todo}
+          <li class="rounded-lg bg-white/70 p-3 shadow-sm">
+            <p class="font-medium text-amber-900">{todo.title}</p>
+            {#if todo.due_date}
+              <p class="text-xs text-amber-800">Termin: {formatDueDate(todo.due_date)}</p>
+            {/if}
+          </li>
+        {/each}
+      </ul>
+      {#if $dueSoonQuery.data.length > 3}
+        <p class="mt-3 text-xs text-amber-800">
+          Oraz {$dueSoonQuery.data.length - 3} dodatkowe zadania wymagające uwagi.
+        </p>
+      {/if}
+    </section>
+  {/if}
 
   <form method="GET" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">

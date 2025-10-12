@@ -11,6 +11,7 @@ from backend.app.models.todo import TodoStatus
 from backend.app.models.user import User
 from backend.app.schemas.todo import TodoCreate, TodoRead, TodoUpdate
 from backend.app.services.todo_service import TodoNotFoundError, TodoService
+from backend.app.tasks.reminders import send_due_notifications
 
 router = APIRouter(prefix="/todos", tags=["todos"])
 
@@ -31,6 +32,34 @@ def list_todos(
         user_id=current_user.id, status=status, skip=skip, limit=limit
     )
     return todos
+
+
+@router.get("/due-soon", response_model=List[TodoRead])
+def list_due_soon(
+    *,
+    hours: int = Query(
+        24,
+        ge=1,
+        le=168,
+        description="Liczba godzin, w których zadania uznawane są za pilne.",
+    ),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> List[TodoRead]:
+    """Return todos due within the next ``hours`` for the current user."""
+
+    service = TodoService(db)
+    return service.list_due_soon(user_id=current_user.id, hours=hours)
+
+
+@router.post("/trigger-reminders", status_code=status.HTTP_202_ACCEPTED)
+def trigger_reminders(
+    _current_user: User = Depends(get_current_user),
+) -> dict[str, str]:
+    """Trigger the reminder task manually (useful for development/testing)."""
+
+    result = send_due_notifications.delay()
+    return {"task_id": result.id}
 
 
 @router.post("/", response_model=TodoRead, status_code=status.HTTP_201_CREATED)

@@ -1,6 +1,6 @@
 """Business logic for todo operations."""
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional, Union
 
 from sqlalchemy import select
@@ -83,6 +83,22 @@ class TodoService:
         todo = self._get_owned_todo(todo_id=todo_id, user_id=user_id)
         self.db.delete(todo)
         self.db.commit()
+
+    def list_due_soon(self, *, user_id: int, hours: int = 24) -> List[TodoItem]:
+        """Return todos due within the next ``hours`` for the given user."""
+
+        now = datetime.utcnow()
+        upcoming = now + timedelta(hours=hours)
+        stmt = (
+            select(TodoItem)
+            .where(TodoItem.user_id == user_id)
+            .where(TodoItem.due_date != None)  # noqa: E711 - intentional SQLAlchemy comparison
+            .where(TodoItem.status != TodoStatus.COMPLETED)
+            .where(TodoItem.due_date >= now)
+            .where(TodoItem.due_date <= upcoming)
+            .order_by(TodoItem.due_date.asc())
+        )
+        return self.db.execute(stmt).scalars().all()
 
     def _get_owned_todo(self, *, todo_id: int, user_id: int) -> TodoItem:
         todo = self.db.get(TodoItem, todo_id)
